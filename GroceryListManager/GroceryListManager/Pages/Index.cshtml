@@ -1,0 +1,240 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Grocery List</h1>
+</div>
+<style>
+table#grocerylistheader {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+#grocerylistheader td, #grocerylistheader th {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+}
+
+#grocerylistheader tr:nth-child(even) {
+    background-color: #dddddd;
+}
+</style>
+<style>
+    table#grocerylist {
+        font-family: arial, sans-serif;
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+    #grocerylist td, #grocerylist th {
+        border: 1px solid #dddddd;
+        text-align: left;
+        padding: 8px;
+    }
+
+    #grocerylist tr:nth-child(even) {
+        background-color: #dddddd;
+    }
+</style>
+<div class="alert">Loading...</div>
+
+<table id="grocerylist" >
+
+</table>
+
+
+@section Scripts {
+    <script>
+$(function() {
+    loadData();
+
+    $("#grocerylist").on("click", "#createItem",
+        function () {
+
+            
+            var newname = $("#newname").val();
+            var newquan = $("#newquantity").val();
+            var newpurch = false;
+            if ($("#newpurchased").is(":checked")) {
+                newpurch = true;
+            };
+
+            var newitem = {
+                name: newname,
+                quantity: newquan,
+                purchased: newpurch,
+
+            }
+            console.log($("#newpurchased").val());
+            //console.log(newname);
+            //console.log(newquan);
+            console.log(newpurch);
+            console.log(newitem);
+
+            $.ajax({
+                url: "/api/items",
+                dataType: 'json',
+                contentType: 'application/json',
+                data: JSON.stringify(newitem),
+                method: 'POST'
+            }).done(function () {
+                loadData();
+            }).fail(function () {
+                alert("there wasn an error");
+            });
+
+        });
+    });
+
+
+
+
+
+
+        function loadData() {
+            $.ajax({
+                url: "/api/items",
+                dataType: 'json',
+                contentType: 'application/json',
+                method: 'GET'
+            }).done(function (responseJSON, status, xhr) {
+                $("#grocerylist").empty();
+                $("#grocerylist").append('<tr><th>Item</th><th>Quantity</th><th>Purchased</th><th> </th></tr><tr><td><input type="text" id="newname" /></td><td><input type="text" id="newquantity" /></td><td><input type="checkbox" id="newpurchased" /></td><td><button id="createItem">Create an Item</button></td></tr>');
+                $.each(responseJSON, function (index, item) {
+
+                    $(".alert").hide();
+                    if (item.purchased == false) {
+                        $("#grocerylist").append('<tr item-id="' + item.id + '"><td>' + item.name + '</td><td>' + item.quantity + '</td><td><input type="checkbox" class="itempurchased" ></td><td><a href="#" class="item-delete">delete</a></td></tr>');
+                    }
+                    else if (item.purchased == true){
+                        $("#grocerylist").append('<tr item-id="' + item.id + '"><td>' + item.name + '</td><td>' + item.quantity + '</td><td><input type="checkbox" class="itempurchased" checked></td><td><a href="#" class="item-delete">delete</a></td></tr>');
+                    }
+                        /*if (item.purchased == true) {
+                        $("#" + item.id).html('<tr item-id="' + item.id + '" style="background-color:green"><td>' + item.name + '</td><td>' + item.quantity + '</td><td><input type="checkbox" class="itempurchased" checked></td><td><a href="#" class="item-delete">delete</a></td></tr>');
+                    }*/
+
+                });
+            }).fail(function(xhr,status,error) {
+                console.log("fail", xhr, status, error);
+                alert("There was an error retrieving the data");
+            });
+        }
+
+
+
+
+        function deleteItem(id) {
+            $.ajax({
+                url: '/api/items/' + id,
+                dataType: 'json',
+                contentType: 'application/json',
+                method: 'DELETE',
+            }).done(function(responseData, status, xhr) {
+                loadData();
+            }).fail(function(xhr, status, error) {
+                alert("There was an error deleting your item");
+            });
+
+        }
+        function purchaseItem(id) {
+
+            
+            $.ajax({
+                    url: '/api/items/' + id,
+                    dataType: 'json',
+                    contentType: 'application/json',
+                    method: 'PUT',
+                    
+                }).done(function(responseData, status, xhr) {
+                    loadData(); // RELOAD THE BOOK DATA
+                    if (callback) {
+                        callback();
+                    }
+                }).fail(function(xhr, status, error) {
+                    alert("There was an error saving your book");
+                });
+           /* var updateditem;
+            $.ajax({
+                url: '/api/items/' + id,
+                dataType: 'json',
+                contentType: 'application/json',
+                method: 'GET',
+            }).done(function (responseData, status, xhr) {
+                $.each(responseJSON, function (index, item) {
+                    var newname = item.name;
+            var newquan = item.quantity;
+                var newpurch = false;
+                if (item.purchased == true) {
+                    newpurch = false;
+                }
+                else if (item.purchased == false) {
+                    newpurch = true;
+                }
+            
+
+            var newitem = {
+                name: newname,
+                quantity: newquan,
+                purchased: newpurch,
+
+            }
+            console.log(newname);
+            console.log(newquan);
+            console.log(newpurch);
+            console.log(newitem);
+                }
+                
+
+            $.ajax({
+                url: "/api/items",
+                dataType: 'json',
+                contentType: 'application/json',
+                data: JSON.stringify(newitem),
+                method: 'POST'
+            }).done(function () {
+                loadData();
+            }).fail(function () {
+                alert("there wasn an error");
+            });
+
+                /*if (item.purchased == true) {
+                    item.purchased = false
+                }
+                else if (item.purchased == false) {
+                    item.purchased = true
+                }X
+                loadData();
+            }).fail(function(xhr, status, error) {
+                alert("There was an error updating your item");
+            })*/
+
+        }
+
+
+        $("#grocerylist").on('click', 'a.item-delete', function() {
+
+            var id = $(this).parents("tr").attr('item-id');
+            if (confirm("Are you sure you want to delete this item")) {
+                console.log(id);
+                deleteItem(id);
+            }
+            return false;
+        });
+        $("#grocerylist").on('click', 'input.itempurchased', function() {
+
+            var id = $(this).parents("tr").attr('item-id');
+
+            if (confirm("Are you sure you want to update this item")) {
+                console.log(id);
+                
+                purchaseItem(id);
+            }
+            return false;
+        });
+    </script>
+}
