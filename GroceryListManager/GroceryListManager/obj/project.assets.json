@@ -12943,11 +12943,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Dominic\\Documents\\GitHub\\IS7012\\GroceryListManager\\GroceryListManager\\GroceryListManager.csproj",
+      "projectUniqueName": "C:\\Users\\Dominic\\Documents\\GitHub\\ADVWEBDEV\\GroceryListManager\\GroceryListManager\\GroceryListManager.csproj",
       "projectName": "GroceryListManager",
-      "projectPath": "C:\\Users\\Dominic\\Documents\\GitHub\\IS7012\\GroceryListManager\\GroceryListManager\\GroceryListManager.csproj",
+      "projectPath": "C:\\Users\\Dominic\\Documents\\GitHub\\ADVWEBDEV\\GroceryListManager\\GroceryListManager\\GroceryListManager.csproj",
       "packagesPath": "C:\\Users\\Dominic\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Dominic\\Documents\\GitHub\\IS7012\\GroceryListManager\\GroceryListManager\\obj\\",
+      "outputPath": "C:\\Users\\Dominic\\Documents\\GitHub\\ADVWEBDEV\\GroceryListManager\\GroceryListManager\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
